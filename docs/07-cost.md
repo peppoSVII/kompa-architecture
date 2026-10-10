@@ -1,4 +1,4 @@
-# 06 — Cost model: the AI is 30–66× the infrastructure
+# 07 — Cost model: the AI is 30–66× the infrastructure
 
 ## The headline finding
 
@@ -72,7 +72,7 @@ A cost model is useless without a ceiling. The ones that apply here:
 | **Max instances** | A physical ceiling: requests are refused rather than scaled |
 | **Request timeout** | No instance held hostage |
 | **Per-user daily quota** | Persisted, atomic, so it survives restarts |
-| **Per-user rate limit** | ⚠️ in-memory today — see [04](04-stateless.md) |
+| **Per-user rate limit** | ⚠️ in-memory today — see [04](04-architecture-phase-2.md) |
 | **Monthly API call budget on the places provider** | Keeps a secondary integration inside its free tier |
 
 ## The decision this drove
@@ -84,7 +84,7 @@ conclusions came out of it:
    reasonable options is a few dollars. Optimise the model bill.
 2. **The cheapest host is not automatically right.** The option that would have
    saved a couple of euros per month required an always-on process — which
-   conflicted with the architecture in [04](04-stateless.md). A cheaper bill that
+   conflicted with the architecture in [04](04-architecture-phase-2.md). A cheaper bill that
    reintroduces in-memory state is a bad trade.
 3. **Free tiers have conditions, not just limits.** One provider's free tier
    allowed using submitted content to improve their products. For a personal
@@ -100,4 +100,4 @@ to fetch reliably); they were cross-validated against a documented real-world
 bill and reproduced it exactly. That is a reasonable check, not a proof, and it
 is stated as such.
 
-→ Next: [07 — Decisions](07-decisions.md)
+→ Next: [08 — Decisions](08-decisions.md)

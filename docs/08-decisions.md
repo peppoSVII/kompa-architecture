@@ -1,4 +1,4 @@
-# 07 — Decisions, alternatives, and what would change my mind
+# 08 — Decisions, alternatives, and what would change my mind
 
 A decision without the rejected options is an opinion. Each entry records what
 was chosen, what was rejected, **why** — and the condition under which the
@@ -12,9 +12,9 @@ choice should be revisited.
 |---|---|
 | **Chosen** | The client that performed the write reports it to the server |
 | **Rejected** | A server process watching the database; database triggers invoking functions |
-| **Why** | A watching process must always run, which blocks scaling to zero and keeps state in memory ([04](04-stateless.md)). The client already knows everything the server would have to infer: user action vs automatic fill, add vs edit, mid-import vs finished. |
+| **Why** | A watching process must always run, which blocks scaling to zero and keeps state in memory ([04](04-architecture-phase-2.md)). The client already knows everything the server would have to infer: user action vs automatic fill, add vs edit, mid-import vs finished. |
 | **Cost of the choice** | Real work moved into the client (coalescing, outbox integration, guards) — a genuine trade, not a free win |
-| **Would revisit if** | A writer appears that is *not* this client (another platform, an admin tool, a bulk import). That is exactly the bug in [04](04-stateless.md), and it is the standing risk of this design. |
+| **Would revisit if** | A writer appears that is *not* this client (another platform, an admin tool, a bulk import). That is exactly the bug in [04](04-architecture-phase-2.md), and it is the standing risk of this design. |
 
 ## D2 — Hosting: a scale-to-zero container platform
 
@@ -65,7 +65,7 @@ price if the downside is "your app disappears and cannot be moved".
 | The rest of the backend would need porting to a different runtime | ✅ still applies |
 
 **Honest note:** the first objection was the real blocker, and the work in
-[04](04-stateless.md) **removed it**. The decision should be re-examined rather
+[04](04-architecture-phase-2.md) **removed it**. The decision should be re-examined rather
 than inherited — what remains is porting cost, not feasibility. A decision that
 was correct under old constraints is not automatically correct under new ones.
 
@@ -109,4 +109,4 @@ None of these decisions is permanent, and two of them (D5, D6) are explicitly
 flagged as **expired reasoning**. That is the point: recording the *condition*
 attached to a decision is what makes it revisitable instead of tribal knowledge.
 
-→ Next: [08 — Testing](08-testing.md)
+→ Next: [09 — Testing](09-testing.md)

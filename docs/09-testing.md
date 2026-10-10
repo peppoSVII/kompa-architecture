@@ -1,4 +1,4 @@
-# 08 — Testing: pure logic, hand-written checks, no framework
+# 09 — Testing: pure logic, hand-written checks, no framework
 
 ## The constraint
 
@@ -90,7 +90,7 @@ The notification suites each correspond to a bug that actually happened:
 | Queue cleanup | Retrying forever against a record that was deleted |
 | Freshness guards | Notifications for old data when the app opens |
 
-The last one is the double-emit bug described in [04](04-stateless.md) — the
+The last one is the double-emit bug described in [04](04-architecture-phase-2.md) — the
 test asserts the exact scenario that produced it.
 
 ## What is *not* covered
@@ -112,6 +112,6 @@ Stated plainly, because a testing section that only lists wins is marketing:
 > Anything that *performs* stays thin, and is validated by hand.
 
 This is what makes the suite small enough to maintain and sharp enough to matter.
-It is also why the migration in [04](04-stateless.md) was possible at all.
+It is also why the migration in [04](04-architecture-phase-2.md) was possible at all.
 
 → Back to [README](../README.md)

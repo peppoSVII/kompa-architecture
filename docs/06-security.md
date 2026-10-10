@@ -1,4 +1,4 @@
-# 05 — Security model: a write path that trusts nobody
+# 06 — Security model: a write path that trusts nobody
 
 ## The problem being solved
 
@@ -112,4 +112,4 @@ Listed rather than hidden:
 > Everything that is text, recipients, identity or quantity is reconstructed
 > server-side from the database.
 
-→ Next: [06 — Cost model](06-cost.md)
+→ Next: [07 — Cost model](07-cost.md)
