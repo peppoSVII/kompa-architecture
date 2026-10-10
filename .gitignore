@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build / local artefacts
+node_modules/
+dist/
+build/
+*.log
+*.tmp
+*.bak
+
+# Local scratch (never publish personal notes or drafts here)
+scratch/
+private/

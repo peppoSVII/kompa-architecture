@@ -1,0 +1,70 @@
+Kompa — notification flow: from a write to a ringing phone
+==========================================================
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 1. DEVICE A — the writer                                             │
+│    A user adds an expense                                            │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 2. APP — write path                                                  │
+│    • writes the expense to the database  ───────►  source of truth   │
+│    • appends an intent to the ON-DISK outbox: "notify group G"       │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 3. APP — coalescing window (~3.5 s)                                  │
+│    Importing 10 photos produces ONE notification, not ten            │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 4. APP — durable outbox                                              │
+│    Survives app termination. Retried on failure and on reconnect.    │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │  POST /api/notify  +  ID token
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 5. SERVER — the trust boundary                                       │
+│    • who are you?        → from the TOKEN, never the payload         │
+│    • are you in group G? → checked against the database → 403 if no  │
+│    • does it exist?      → re-read from the database    → 409 if no  │
+│    • already sent?       → atomic dedup, 5 s window     → skip       │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 6. DATABASE                                                          │
+│    Members of group G, their device tokens, their language           │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 7. FCM / APNs                                                        │
+│    Delivery. If a device is offline the message is queued — until    │
+│    it expires (1 hour TTL, so stale notifications are dropped).      │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│ 8. DEVICE B — the recipient                                          │
+│    • app closed       → the OS shows the notification                │
+│    • app in foreground → the app shows it locally (the remote one    │
+│                          is suppressed, or it would appear twice)    │
+└──────────────────────────────────────────────────────────────────────┘
+
+
+Why not peer-to-peer
+--------------------
+
+  A suspended app has no process, no socket and no running code.
+  The only channel that can wake it belongs to the OPERATING SYSTEM,
+  and that channel requires a credential that must not ship in the app.
+
+  So exactly one hop through a server is structurally required.
+  See docs/03-notifications.md for the full reasoning.
+
+
+The other path (app in the foreground)
+--------------------------------------
+
+  database ──(client is listening)──► client ──► LOCAL notification
+
+  No server of ours is involved. It just does not cover the case
+  that matters most: a closed app.
